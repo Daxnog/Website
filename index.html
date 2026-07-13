@@ -1,53 +1,410 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width,initial-scale=1" name="viewport"/>
-<title>Vedant Gorade</title>
+<title>Vedant Gorade — Computer Engineering Student</title>
+<meta name="description" content="Vedant Gorade — Computer Engineering student at DY Patil School of Engineering & Technology, Pune." />
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.gstatic.com" rel="preconnect" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;scroll-behavior:smooth}
-body{font-family:Poppins,sans-serif;background:#0f172a;color:#f8fafc;line-height:1.7}
-nav{position:sticky;top:0;background:#111827ee;padding:16px 8%;display:flex;justify-content:space-between}
-nav a{color:#cbd5e1;text-decoration:none;margin-left:18px}
-nav a:hover,.btn{color:#3b82f6}
-section{padding:80px 8%;max-width:1100px;margin:auto}
-.hero{min-height:85vh;display:flex;flex-direction:column;justify-content:center}
-h1{font-size:3rem} h2{margin-bottom:20px;color:#3b82f6}
-.card{background:#1e293b;padding:20px;border-radius:14px;margin:14px 0}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}
-.badge{display:inline-block;background:#334155;padding:8px 14px;border-radius:30px;margin:6px}
-a{color:#60a5fa}
-footer{text-align:center;padding:30px;color:#94a3b8;border-top:1px solid #334155}
+  :root{
+    --bg:#0a0c10;
+    --panel:#12151c;
+    --panel-2:#161a23;
+    --line:#232733;
+    --accent:#f5a623;      /* headlight amber */
+    --accent-dim:#8a5f1f;
+    --accent-2:#35d0ba;    /* dashboard teal, used sparingly */
+    --text:#edeff3;
+    --muted:#8a8f9c;
+    --white-line:#ffffff;
+    --radius:14px;
+    --maxw:1080px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Inter',sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    line-height:1.7;
+    overflow-x:hidden;
+  }
+  h1,h2,h3{font-family:'Space Grotesk',sans-serif;font-weight:600;letter-spacing:-0.01em}
+  .mono{font-family:'JetBrains Mono',monospace}
+  a{color:inherit}
+  ::selection{background:var(--accent);color:#0a0c10}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+
+  /* background texture: faint asphalt grain + horizon glow */
+  body::before{
+    content:"";
+    position:fixed;inset:0;
+    background:
+      radial-gradient(600px 300px at 15% -5%, rgba(245,166,35,0.10), transparent 70%),
+      radial-gradient(500px 260px at 90% 10%, rgba(53,208,186,0.06), transparent 70%);
+    pointer-events:none;
+    z-index:0;
+  }
+
+  /* ---------- nav ---------- */
+  nav{
+    position:sticky;top:0;z-index:50;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:18px 8%;
+    background:rgba(10,12,16,0.75);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .logo{font-family:'JetBrains Mono',monospace;font-weight:600;font-size:1.05rem;letter-spacing:-0.02em}
+  .logo .bracket{color:var(--accent)}
+  .nav-links{display:flex;gap:6px;align-items:center}
+  .nav-links a{
+    color:var(--muted);text-decoration:none;font-size:0.92rem;
+    padding:8px 14px;border-radius:8px;transition:color .2s, background .2s;
+  }
+  .nav-links a:hover{color:var(--text);background:var(--panel-2)}
+  .nav-toggle{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:6px}
+  .nav-toggle span{width:22px;height:2px;background:var(--text)}
+
+  /* ---------- layout helpers ---------- */
+  section{padding:96px 8%;max-width:var(--maxw);margin:auto;position:relative;z-index:1}
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace;font-size:0.78rem;color:var(--accent);
+    text-transform:uppercase;letter-spacing:0.14em;margin-bottom:14px;display:flex;align-items:center;gap:10px;
+  }
+  .eyebrow::before{content:"";width:22px;height:1px;background:var(--accent)}
+  h2{font-size:1.9rem;margin-bottom:36px}
+  .card{
+    background:var(--panel);border:1px solid var(--line);
+    padding:26px 28px;border-radius:var(--radius);
+  }
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}
+
+  /* reveal on scroll */
+  .reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease, transform .6s ease}
+  .reveal.in{opacity:1;transform:translateY(0)}
+
+  /* section divider */
+  .divider{
+    height:1px;max-width:var(--maxw);margin:0 auto;
+    background:var(--line);
+  }
+
+  /* ---------- hero ---------- */
+  .hero{
+    min-height:88vh;display:flex;flex-direction:column;justify-content:center;gap:22px;
+  }
+  .hero .eyebrow{margin-bottom:0}
+  .hero h1{font-size:clamp(2.4rem,6vw,3.6rem);line-height:1.08}
+  .hero p.tag{color:var(--muted);font-size:1.15rem;max-width:520px}
+  .hero-ctas{display:flex;gap:14px;margin-top:8px;flex-wrap:wrap}
+  .btn{
+    display:inline-block;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.95rem;
+    padding:13px 24px;border-radius:9px;text-decoration:none;transition:transform .15s ease, background .2s ease;
+    border:1px solid transparent;
+  }
+  .btn-primary{background:var(--accent);color:#0a0c10}
+  .btn-primary:hover{transform:translateY(-2px)}
+  .btn-ghost{border-color:var(--line);color:var(--text)}
+  .btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
+
+  /* ---------- about ---------- */
+  .about-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:22px;align-items:start}
+  .stat{padding:16px 0;border-top:1px solid var(--line)}
+  .stat:first-child{border-top:none}
+  .stat .num{font-family:'Space Grotesk',sans-serif;font-size:1.5rem;color:var(--accent)}
+  .stat .label{color:var(--muted);font-size:0.85rem}
+
+  /* ---------- skills ---------- */
+  .skill-group{margin-bottom:22px}
+  .skill-group h4{
+    font-family:'JetBrains Mono',monospace;font-size:0.8rem;color:var(--muted);
+    text-transform:uppercase;letter-spacing:0.1em;margin-bottom:12px;
+  }
+  .badge{
+    display:inline-flex;align-items:center;gap:6px;
+    background:var(--panel-2);border:1px solid var(--line);
+    padding:8px 15px;border-radius:8px;margin:0 8px 8px 0;
+    font-size:0.88rem;font-family:'JetBrains Mono',monospace;
+  }
+  .badge.learning::after{content:"learning";color:var(--accent);font-size:0.68rem;margin-left:4px;opacity:0.8}
+
+  /* ---------- timeline (education / experience) ---------- */
+  .timeline{position:relative;padding-left:28px}
+  .timeline::before{
+    content:"";position:absolute;left:5px;top:6px;bottom:6px;width:2px;
+    background-image:repeating-linear-gradient(180deg, var(--line) 0 8px, transparent 8px 16px);
+  }
+  .t-item{position:relative;padding-bottom:34px}
+  .t-item:last-child{padding-bottom:0}
+  .t-item::before{
+    content:"";position:absolute;left:-28px;top:5px;width:10px;height:10px;border-radius:50%;
+    background:var(--accent);box-shadow:0 0 0 4px rgba(245,166,35,0.15);
+  }
+  .t-item .period{font-family:'JetBrains Mono',monospace;font-size:0.78rem;color:var(--accent-2);margin-bottom:6px;display:block}
+  .t-item h3{font-size:1.15rem;margin-bottom:4px}
+  .t-item .role{color:var(--muted);font-size:0.9rem;margin-bottom:10px}
+  .t-item ul{margin-left:18px;color:#c7cbd4;font-size:0.95rem}
+  .t-item ul li{margin-bottom:4px}
+
+  /* ---------- projects ---------- */
+  .proj-card{display:flex;flex-direction:column;gap:12px;transition:border-color .2s}
+  .proj-card:hover{border-color:var(--accent-dim)}
+  .proj-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+  .proj-card h3{font-size:1.1rem}
+  .status{
+    font-family:'JetBrains Mono',monospace;font-size:0.68rem;text-transform:uppercase;letter-spacing:0.08em;
+    background:rgba(245,166,35,0.12);color:var(--accent);padding:4px 9px;border-radius:20px;white-space:nowrap;
+  }
+  .proj-card p{color:var(--muted);font-size:0.92rem}
+  .tech-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+  .tech-row span{
+    font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:var(--accent-2);
+    border:1px solid rgba(53,208,186,0.3);padding:3px 9px;border-radius:20px;
+  }
+
+  /* ---------- resume ---------- */
+  .resume-card{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
+  .resume-card p{color:var(--muted);max-width:420px}
+
+  /* ---------- contact ---------- */
+  .contact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+  .contact-item{
+    display:flex;align-items:center;gap:14px;text-decoration:none;
+  }
+  .contact-item .icon{
+    width:38px;height:38px;flex:none;border-radius:9px;background:var(--panel-2);border:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;color:var(--accent);
+  }
+  .contact-item .label{font-size:0.75rem;color:var(--muted);font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:0.08em}
+  .contact-item .value{font-size:0.95rem;transition:color .2s}
+  .contact-item:hover .value{color:var(--accent)}
+
+  footer{text-align:center;padding:40px 8%;color:var(--muted);border-top:1px solid var(--line);font-size:0.85rem}
+  footer .mono{color:var(--line)}
+
+  @media (max-width:720px){
+    section{padding:64px 6%}
+    .about-grid{grid-template-columns:1fr}
+    .nav-links{
+      position:absolute;top:100%;left:0;right:0;background:#0a0c10;
+      flex-direction:column;align-items:stretch;padding:10px;border-bottom:1px solid var(--line);
+      display:none;
+    }
+    .nav-links.open{display:flex}
+    .nav-toggle{display:flex}
+    .resume-card{flex-direction:column;align-items:flex-start}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .reveal{transition:none;opacity:1;transform:none}
+  }
 </style>
 </head>
 <body>
-<nav><strong>Vedant Gorade</strong><div>
-<a href="#about">About</a><a href="#skills">Skills</a><a href="#education">Education</a><a href="#experience">Experience</a><a href="#projects">Projects</a><a href="#resume">Resume</a><a href="#contact">Contact</a>
-</div></nav>
+
+<nav>
+  <span class="logo"><span class="bracket">&lt;</span>Vedant Gorade<span class="bracket">/&gt;</span></span>
+  <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="nav-links" id="navLinks">
+    <a href="#about">About</a><a href="#skills">Skills</a><a href="#education">Education</a>
+    <a href="#experience">Experience</a><a href="#projects">Projects</a><a href="#resume">Resume</a><a href="#contact">Contact</a>
+  </div>
+</nav>
+
 <section class="hero">
-<h1>Hi, I'm Vedant.</h1>
-<p>Computer Engineering Student<br/>Frontend &amp; Backend Enthusiast</p>
+  <div class="eyebrow">Computer Engineering &middot; DY Patil, Pune</div>
+  <h1>Hi, I'm Vedant.</h1>
+  <p class="tag">I build practical software and enjoy turning ideas into interfaces people actually use.</p>
+  <div class="hero-ctas">
+    <a class="btn btn-primary" href="#projects">View my work</a>
+    <a class="btn btn-ghost" href="#contact">Get in touch</a>
+  </div>
 </section>
-<section id="about">
-<h2>About Me</h2>
-<div class="card">
-<p>I'm a Computer Engineering student at DY Patil School of Engineering &amp; Technology, Pune. I enjoy building websites, learning new technologies, and improving my programming skills through practical projects. Outside of coding, I like bike riding and capturing moments through photography. I'm always looking for opportunities to learn, create, and grow as a developer.</p>
-</div>
+
+<div class="divider"></div>
+
+<section id="about" class="reveal">
+  <div class="eyebrow">About</div>
+  <div class="about-grid">
+    <div class="card">
+      <p>I'm a Computer Engineering student at DY Patil School of Engineering &amp; Technology, Pune, currently in my final year. I like building things people can actually use, and I learn fastest by shipping small, practical projects rather than just reading about them.</p>
+      <br/>
+      <p>Alongside coursework, I take on freelance web development work, most recently building a full website for a U.S.-based legal bookkeeping firm. Outside of code, I ride motorcycles long-distance, maintain my own bike, and spend time on photography &mdash; three hobbies that all reward the same kind of patience as debugging.</p>
+    </div>
+    <div class="card">
+      <div class="stat"><span class="num">7.38</span><span class="label mono">CGPA / 10 &mdash; through semester 5</span></div>
+      <div class="stat"><span class="num">2027</span><span class="label mono">expected graduation</span></div>
+      <div class="stat"><span class="num">2</span><span class="label mono">live freelance &amp; personal projects</span></div>
+    </div>
+  </div>
 </section>
-<section id="skills"><h2>Skills</h2><div class="card">
-<span class="badge">Python</span><span class="badge">SQL</span><span class="badge">HTML</span><span class="badge">MySQL</span><span class="badge">Java (Learning)</span><span class="badge">C (Learning)</span><span class="badge">GitHub</span><span class="badge">VS Code</span>
-</div></section>
-<section id="education"><h2>Education</h2><div class="card"><h3>DY Patil School of Engineering &amp; Technology</h3><p>B.Tech in Computer Engineering (2023–2027)<br/>CGPA: 7.38 / 10</p></div></section>
-<section id="experience"><h2>Experience</h2><div class="card"><h3>AICTE / MIC Student Innovation Hackathon</h3><p><b>Team Leader</b></p><ul><li>Coordinated planning and presentations.</li><li>Worked on a disaster management solution focused on sustainable stormwater management.</li></ul></div></section>
-<section id="projects"><h2>Projects</h2><div class="card"><ul><li>Expense Tracker (Under Development)</li><li>Inventory App (Under Development)</li></ul></div></section>
-<section id="resume"><h2>Resume</h2><div class="card"><p>Interested in learning more? Download my resume below.</p><p style="margin-top:20px;"><a class="btn" download="" href="Vedant_Resume.pdf" style="display:inline-block;background:#3b82f6;color:white;padding:12px 22px;border-radius:8px;text-decoration:none;font-weight:600;">Download Resume</a></p></div></section><section id="contact"><h2>Contact</h2><div class="card">
-<p>Email: <a href="mailto:goradevedantajit@gmail.com">goradevedantajit@gmail.com</a></p>
-<p>Phone: <a href="tel:+919834453247">+91 9834453247</a></p>
-<p>GitHub: <a href="https://github.com/Daxnog" target="_blank">github.com/Daxnog</a></p>
-<p>LinkedIn: <a href="https://linkedin.com/in/vedantgorade" target="_blank">linkedin.com/in/vedantgorade</a></p>
-</div></section>
-<footer>© 2026 Vedant Gorade</footer>
-</body></html>
+
+<div class="divider"></div>
+
+<section id="skills" class="reveal">
+  <div class="eyebrow">Skills</div>
+  <h2>What I work with</h2>
+  <div class="skill-group">
+    <h4>Languages</h4>
+    <span class="badge">HTML &amp; CSS</span>
+    <span class="badge">Python</span>
+    <span class="badge">SQL</span>
+    <span class="badge learning">Java</span>
+    <span class="badge learning">C</span>
+  </div>
+  <div class="skill-group">
+    <h4>Tools &amp; platforms</h4>
+    <span class="badge">MySQL</span>
+    <span class="badge">Git &amp; GitHub</span>
+    <span class="badge">VS Code</span>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section id="education" class="reveal">
+  <div class="eyebrow">Education</div>
+  <h2>Education</h2>
+  <div class="timeline">
+    <div class="t-item">
+      <span class="period">2023 &mdash; 2027</span>
+      <h3>DY Patil School of Engineering &amp; Technology, Pune</h3>
+      <p class="role">B.Tech in Computer Engineering &middot; CGPA 7.38 / 10</p>
+      <ul>
+        <li>Coursework spanning algorithms, database systems, and machine learning fundamentals.</li>
+        <li>Combining coursework with self-directed projects and freelance client work.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section id="experience" class="reveal">
+  <div class="eyebrow">Experience</div>
+  <h2>Experience</h2>
+  <div class="timeline">
+    <div class="t-item">
+      <span class="period">Ongoing</span>
+      <h3>Freelance Web Developer</h3>
+      <p class="role">Truthful Tallies LLC (legal bookkeeping) &mdash; client project</p>
+      <ul>
+        <li>Designing and building a complete marketing website from scratch, iterating directly with the business owner.</li>
+        <li>Handled everything from layout and copy to logo design and service-badge integration.</li>
+      </ul>
+    </div>
+    <div class="t-item">
+      <span class="period">First year</span>
+      <h3>AICTE / MIC Student Innovation Hackathon</h3>
+      <p class="role">Team Leader</p>
+      <ul>
+        <li>Coordinated team planning and led final presentations.</li>
+        <li>Built a disaster-management solution focused on sustainable stormwater management.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section id="projects" class="reveal">
+  <div class="eyebrow">Projects</div>
+  <h2>Projects</h2>
+  <div class="grid">
+    <div class="card proj-card">
+      <div class="proj-top">
+        <h3>Expense Tracker</h3>
+        <span class="status">In progress</span>
+      </div>
+      <p>A personal finance tool for logging day-to-day spending and visualizing where money actually goes, month over month.</p>
+      <div class="tech-row"><span>Python</span><span>SQL</span></div>
+    </div>
+    <div class="card proj-card">
+      <div class="proj-top">
+        <h3>Inventory App</h3>
+        <span class="status">In progress</span>
+      </div>
+      <p>A lightweight system for tracking stock levels and item movement, built around a straightforward MySQL schema.</p>
+      <div class="tech-row"><span>Python</span><span>MySQL</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section id="resume" class="reveal">
+  <div class="eyebrow">Resume</div>
+  <div class="card resume-card">
+    <p>Want the full picture &mdash; coursework, projects, and experience in one place? Grab a copy of my resume.</p>
+    <a class="btn btn-primary" download href="Vedant_Resume.pdf">Download resume</a>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section id="contact" class="reveal">
+  <div class="eyebrow">Contact</div>
+  <h2>Let's talk</h2>
+  <div class="contact-grid">
+    <a class="contact-item" href="mailto:goradevedantajit@gmail.com">
+      <span class="icon">&#9993;</span>
+      <span><span class="label">Email</span><br/><span class="value">goradevedantajit@gmail.com</span></span>
+    </a>
+    <a class="contact-item" href="tel:+919834453247">
+      <span class="icon">&#9742;</span>
+      <span><span class="label">Phone</span><br/><span class="value">+91 98344 53247</span></span>
+    </a>
+    <a class="contact-item" href="https://github.com/Daxnog" target="_blank" rel="noopener">
+      <span class="icon">&lt;/&gt;</span>
+      <span><span class="label">GitHub</span><br/><span class="value">github.com/Daxnog</span></span>
+    </a>
+    <a class="contact-item" href="https://linkedin.com/in/vedantgorade" target="_blank" rel="noopener">
+      <span class="icon">in</span>
+      <span><span class="label">LinkedIn</span><br/><span class="value">linkedin.com/in/vedantgorade</span></span>
+    </a>
+  </div>
+</section>
+
+<footer>
+  <span class="mono">&copy; 2026 Vedant Gorade &mdash; built from scratch, one commit at a time.</span>
+</footer>
+
+<script>
+  // scroll reveal
+  (function(){
+    var items = document.querySelectorAll('.reveal');
+    if (!('IntersectionObserver' in window)){
+      items.forEach(function(el){ el.classList.add('in'); });
+      return;
+    }
+    var obs = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting){
+          entry.target.classList.add('in');
+          obs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    items.forEach(function(el){ obs.observe(el); });
+  })();
+
+  // mobile nav toggle
+  (function(){
+    var btn = document.getElementById('navToggle');
+    var links = document.getElementById('navLinks');
+    btn.addEventListener('click', function(){
+      var open = links.classList.toggle('open');
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    links.querySelectorAll('a').forEach(function(a){
+      a.addEventListener('click', function(){ links.classList.remove('open'); });
+    });
+  })();
+</script>
+</body>
+</html>
